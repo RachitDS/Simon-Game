@@ -55,7 +55,7 @@ body {
 
 .scoreboard {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   margin-bottom: 24px;
 }
@@ -190,6 +190,26 @@ body {
   box-shadow: 0 12px 24px rgba(17, 24, 39, 0.25);
 }
 
+.keyboard-hint {
+  margin: 14px 0 0;
+  text-align: center;
+  color: var(--text-soft);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.keyboard-hint span {
+  display: inline-block;
+  min-width: 22px;
+  margin: 0 2px;
+  padding: 2px 6px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: var(--text-main);
+  font-weight: bold;
+}
+
 @media (max-width: 480px) {
   body {
     padding: 14px;
@@ -206,6 +226,10 @@ body {
 
   .game-title {
     font-size: 32px;
+  }
+
+  .scoreboard {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .color-button {

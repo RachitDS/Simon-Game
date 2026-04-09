@@ -1,7 +1,13 @@
-function ButtonGrid({ colors, activeColor, disabled, onColorClick }) {
+function ButtonGrid({
+  colors,
+  activeColor,
+  disabled,
+  onColorClick,
+  buttonRefs
+}) {
   return (
     <div className="game-board">
-      {colors.map(function (color) {
+      {colors.map(function (color, index) {
         const isActive = activeColor === color;
 
         return (
@@ -11,6 +17,9 @@ function ButtonGrid({ colors, activeColor, disabled, onColorClick }) {
             className={
               "color-button " + color + (isActive ? " active" : "")
             }
+            ref={function (element) {
+              buttonRefs.current[index] = element;
+            }}
             onClick={function () {
               onColorClick(color);
             }}

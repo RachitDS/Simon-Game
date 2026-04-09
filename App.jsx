@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
 import ButtonGrid from "./components/ButtonGrid.jsx";
 import ScoreBoard from "./components/ScoreBoard.jsx";
 
@@ -15,6 +16,15 @@ function App() {
   const [sequence, setSequence] = useState([]);
   const [userInput, setUserInput] = useState([]);
   const [level, setLevel] = useState(0);
+  const [highScore, setHighScore] = useState(function () {
+    const savedHighScore = window.localStorage.getItem("simon-high-score");
+
+    if (!savedHighScore) {
+      return 0;
+    }
+
+    return Number(savedHighScore);
+  });
   const [isStarted, setIsStarted] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isPlayerTurn, setIsPlayerTurn] = useState(false);
@@ -22,6 +32,14 @@ function App() {
 
   const timersRef = useRef([]);
   const audioContextRef = useRef(null);
+  const containerRef = useRef(null);
+  const statusCardRef = useRef(null);
+  const buttonRefs = useRef([]);
+  const headerRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const startButtonRef = useRef(null);
+  const sequenceRef = useRef([]);
+  const userInputRef = useRef([]);
 
   useEffect(() => {
     if (!isStarted || sequence.length === 0 || isGameOver) {
@@ -30,6 +48,172 @@ function App() {
 
     playSequence(sequence);
   }, [sequence, isStarted, isGameOver]);
+
+  useEffect(() => {
+    sequenceRef.current = sequence;
+  }, [sequence]);
+
+  useEffect(() => {
+    userInputRef.current = userInput;
+  }, [userInput]);
+
+  useEffect(() => {
+    if (!isGameOver) {
+      const animatedItems = [
+        containerRef.current,
+        statusCardRef.current,
+        ...buttonRefs.current.filter(Boolean)
+      ];
+
+      gsap.set(animatedItems, { clearProps: "all" });
+      return;
+    }
+
+    const buttons = buttonRefs.current.filter(Boolean);
+    const defeatTimeline = gsap.timeline();
+
+    defeatTimeline
+      .to(containerRef.current, {
+        x: -14,
+        duration: 0.08,
+        repeat: 5,
+        yoyo: true,
+        ease: "power1.inOut"
+      })
+      .to(
+        statusCardRef.current,
+        {
+          scale: 1.04,
+          backgroundColor: "#fecaca",
+          borderColor: "#dc2626",
+          duration: 0.2,
+          yoyo: true,
+          repeat: 1,
+          ease: "power1.out"
+        },
+        0
+      )
+      .to(
+        buttons,
+        {
+          scale: 0.92,
+          rotation: function (index) {
+            return index % 2 === 0 ? -5 : 5;
+          },
+          duration: 0.18,
+          yoyo: true,
+          repeat: 1,
+          stagger: 0.04,
+          ease: "power1.out"
+        },
+        0
+      );
+
+    return () => {
+      defeatTimeline.kill();
+    };
+  }, [isGameOver]);
+
+  useEffect(() => {
+    if (level > highScore) {
+      setHighScore(level);
+      window.localStorage.setItem("simon-high-score", String(level));
+    }
+  }, [level, highScore]);
+
+  useEffect(() => {
+    if (isStarted) {
+      return;
+    }
+
+    const introTimeline = gsap.timeline();
+
+    introTimeline
+      .fromTo(
+        containerRef.current,
+        { autoAlpha: 0, y: 32, scale: 0.96 },
+        { autoAlpha: 1, y: 0, scale: 1, duration: 0.55, ease: "power2.out" }
+      )
+      .fromTo(
+        subtitleRef.current,
+        { autoAlpha: 0, y: 14 },
+        { autoAlpha: 1, y: 0, duration: 0.28, ease: "power2.out" },
+        "-=0.28"
+      )
+      .fromTo(
+        headerRef.current,
+        { autoAlpha: 0, y: 18 },
+        { autoAlpha: 1, y: 0, duration: 0.36, ease: "power2.out" },
+        "-=0.2"
+      )
+      .fromTo(
+        statusCardRef.current,
+        { autoAlpha: 0, y: 18 },
+        { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" },
+        "-=0.14"
+      )
+      .fromTo(
+        buttonRefs.current.filter(Boolean),
+        { autoAlpha: 0, y: 22, scale: 0.92 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.28,
+          stagger: 0.06,
+          ease: "back.out(1.6)"
+        },
+        "-=0.12"
+      )
+      .fromTo(
+        startButtonRef.current,
+        { autoAlpha: 0, y: 16, scale: 0.95 },
+        { autoAlpha: 1, y: 0, scale: 1, duration: 0.28, ease: "power2.out" },
+        "-=0.1"
+      );
+
+    return () => {
+      introTimeline.kill();
+    };
+  }, [isStarted]);
+
+  useEffect(() => {
+    function handleKeyDown(event) {
+      const pressedKey = event.key.toLowerCase();
+
+      if (!isStarted && (pressedKey === "enter" || pressedKey === " ")) {
+        event.preventDefault();
+        startGame();
+        return;
+      }
+
+      const keyMap = {
+        "1": "red",
+        r: "red",
+        "2": "green",
+        g: "green",
+        "3": "blue",
+        b: "blue",
+        "4": "yellow",
+        y: "yellow"
+      };
+
+      const selectedColor = keyMap[pressedKey];
+
+      if (!selectedColor) {
+        return;
+      }
+
+      event.preventDefault();
+      handlePlayerInput(selectedColor);
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isStarted, isPlayerTurn, isGameOver, sequence, userInput]);
 
   useEffect(() => {
     return () => {
@@ -142,6 +326,7 @@ function App() {
     clearTimers();
     setIsPlayerTurn(false);
     setUserInput([]);
+    userInputRef.current = [];
     setActiveColor(null);
 
     for (let i = 0; i < nextSequence.length; i++) {
@@ -163,7 +348,9 @@ function App() {
     getAudioContext();
     clearTimers();
     setSequence([getRandomColor()]);
+    sequenceRef.current = [];
     setUserInput([]);
+    userInputRef.current = [];
     setLevel(1);
     setIsStarted(true);
     setIsGameOver(false);
@@ -179,24 +366,25 @@ function App() {
     playGameOverSound();
   }
 
-  function handleColorClick(color) {
+  function handlePlayerInput(color) {
     if (!isStarted || !isPlayerTurn || isGameOver) {
       return;
     }
 
     flashColor(color);
 
-    const nextUserInput = [...userInput, color];
-    const expectedColor = sequence[nextUserInput.length - 1];
+    const nextUserInput = [...userInputRef.current, color];
+    const expectedColor = sequenceRef.current[nextUserInput.length - 1];
 
     setUserInput(nextUserInput);
+    userInputRef.current = nextUserInput;
 
     if (color !== expectedColor) {
       handleGameOver();
       return;
     }
 
-    if (nextUserInput.length === sequence.length) {
+    if (nextUserInput.length === sequenceRef.current.length) {
       setIsPlayerTurn(false);
 
       const nextRoundTimer = setTimeout(function () {
@@ -223,7 +411,8 @@ function App() {
 
   if (isStarted && isPlayerTurn && !isGameOver) {
     statusTitle = "Your Turn";
-    statusMessage = "Repeat the same color order by clicking the buttons.";
+    statusMessage =
+      "Repeat the same color order by clicking the buttons or using R, G, B, Y.";
   }
 
   if (isGameOver) {
@@ -242,28 +431,45 @@ function App() {
   }
 
   return (
-    <main className="game-container">
-      <p className="game-subtitle">React + Vite Simon Game</p>
-      <h1 className="game-title">Simon Game</h1>
+    <main ref={containerRef} className="game-container">
+      <p ref={subtitleRef} className="game-subtitle">
+        React + Vite Simon Game
+      </p>
+      <h1 ref={headerRef} className="game-title">
+        Simon Game
+      </h1>
 
       <ScoreBoard
         level={level}
+        highScore={highScore}
         patternLength={sequence.length}
         statusTitle={statusTitle}
         statusMessage={statusMessage}
         isGameOver={isGameOver}
+        statusCardRef={statusCardRef}
       />
 
       <ButtonGrid
         colors={colors}
         activeColor={activeColor}
         disabled={!isStarted || !isPlayerTurn || isGameOver}
-        onColorClick={handleColorClick}
+        onColorClick={handlePlayerInput}
+        buttonRefs={buttonRefs}
       />
 
-      <button className="start-button" type="button" onClick={startGame}>
+      <button
+        ref={startButtonRef}
+        className="start-button"
+        type="button"
+        onClick={startGame}
+      >
         {buttonLabel}
       </button>
+
+      <p className="keyboard-hint">
+        Keyboard: <span>R</span> Red, <span>G</span> Green, <span>B</span> Blue,
+        <span>Y</span> Yellow
+      </p>
     </main>
   );
 }

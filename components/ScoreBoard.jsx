@@ -1,9 +1,11 @@
 function ScoreBoard({
   level,
+  highScore,
   patternLength,
   statusTitle,
   statusMessage,
-  isGameOver
+  isGameOver,
+  statusCardRef
 }) {
   return (
     <section className="scoreboard">
@@ -17,7 +19,15 @@ function ScoreBoard({
         <p className="score-value">{patternLength}</p>
       </div>
 
-      <div className={"status-card" + (isGameOver ? " danger" : "")}>
+      <div className="score-card">
+        <p className="score-label">High Score</p>
+        <p className="score-value">{highScore}</p>
+      </div>
+
+      <div
+        ref={statusCardRef}
+        className={"status-card" + (isGameOver ? " danger" : "")}
+      >
         <p className="status-title">{statusTitle}</p>
         <p className="game-hint">{statusMessage}</p>
       </div>
