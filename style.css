@@ -1,5 +1,5 @@
 :root {
-  --page-bg: #050816;
+  --page-bg: #08111f;
   --card-bg: rgba(255, 255, 255, 0.94);
   --card-border: #1f2937;
   --text-main: #1f2937;
@@ -17,9 +17,7 @@ body {
   padding: 24px 12px;
   font-family: "Segoe UI", Arial, sans-serif;
   color: var(--text-main);
-  background:
-    radial-gradient(circle at top, rgba(76, 29, 149, 0.22), transparent 30%),
-    linear-gradient(180deg, #0a1020 0%, #050816 45%, #02040b 100%);
+  background-color: var(--page-bg);
 }
 
 #root {
@@ -45,9 +43,9 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 18%, rgba(59, 130, 246, 0.12), transparent 34%),
-    radial-gradient(circle at 15% 78%, rgba(168, 85, 247, 0.08), transparent 28%),
-    radial-gradient(circle at 85% 20%, rgba(236, 72, 153, 0.1), transparent 30%);
+    radial-gradient(circle at 50% 12%, rgba(59, 130, 246, 0.12), transparent 26%),
+    radial-gradient(circle at 18% 82%, rgba(30, 41, 59, 0.28), transparent 34%),
+    radial-gradient(circle at 86% 22%, rgba(37, 99, 235, 0.08), transparent 28%);
   z-index: 0;
 }
 
@@ -55,12 +53,9 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
-  background-size: 120px 120px;
-  mask-image: radial-gradient(circle at center, black 38%, transparent 82%);
-  opacity: 0.35;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0) 24%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0) 22%);
   z-index: 0;
 }
 
@@ -68,8 +63,8 @@ body {
   position: absolute;
   border-radius: 999px;
   mix-blend-mode: screen;
-  filter: blur(80px);
-  opacity: 0.42;
+  filter: blur(90px);
+  opacity: 0.18;
   z-index: 0;
 }
 
@@ -78,7 +73,7 @@ body {
   left: 20px;
   width: 340px;
   height: 340px;
-  background: radial-gradient(circle at 35% 35%, rgba(56, 189, 248, 0.55), rgba(56, 189, 248, 0.16) 45%, transparent 72%);
+  background: radial-gradient(circle at 35% 35%, rgba(59, 130, 246, 0.34), rgba(59, 130, 246, 0.08) 45%, transparent 72%);
 }
 
 .orb-two {
@@ -86,7 +81,7 @@ body {
   right: 60px;
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle at 50% 50%, rgba(217, 70, 239, 0.42), rgba(168, 85, 247, 0.14) 48%, transparent 72%);
+  background: radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.22), rgba(96, 165, 250, 0.05) 48%, transparent 72%);
 }
 
 .orb-three {
@@ -94,7 +89,7 @@ body {
   left: 110px;
   width: 420px;
   height: 420px;
-  background: radial-gradient(circle at 45% 45%, rgba(59, 130, 246, 0.25), rgba(99, 102, 241, 0.1) 48%, transparent 72%);
+  background: radial-gradient(circle at 45% 45%, rgba(30, 64, 175, 0.26), rgba(30, 64, 175, 0.05) 48%, transparent 72%);
 }
 
 .orb-four {
@@ -102,7 +97,7 @@ body {
   right: 180px;
   width: 240px;
   height: 240px;
-  background: radial-gradient(circle at 50% 50%, rgba(244, 114, 182, 0.38), rgba(217, 70, 239, 0.08) 50%, transparent 74%);
+  background: radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.2), rgba(37, 99, 235, 0.04) 50%, transparent 74%);
 }
 
 .orb-five {
@@ -110,7 +105,7 @@ body {
   right: -10px;
   width: 260px;
   height: 260px;
-  background: radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.34), rgba(45, 212, 191, 0.08) 48%, transparent 74%);
+  background: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.28), rgba(15, 23, 42, 0.04) 48%, transparent 74%);
 }
 
 .game-container {

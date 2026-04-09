@@ -127,11 +127,11 @@ function App() {
       .filter(Boolean)
       .map(function (element, index) {
         const positions = [
-          { x: 34, y: -26, scale: 1.08, rotation: 8, duration: 18 },
-          { x: -42, y: 24, scale: 1.12, rotation: -10, duration: 22 },
-          { x: 26, y: 36, scale: 1.07, rotation: 12, duration: 20 },
-          { x: -20, y: -28, scale: 1.05, rotation: -8, duration: 16 },
-          { x: 18, y: 22, scale: 1.06, rotation: 6, duration: 24 }
+          { x: 12, y: -8, scale: 1.02, rotation: 1, duration: 20 },
+          { x: -16, y: 10, scale: 1.03, rotation: -1, duration: 24 },
+          { x: 10, y: 12, scale: 1.02, rotation: 1, duration: 22 },
+          { x: -8, y: -6, scale: 1.01, rotation: -1, duration: 18 },
+          { x: 8, y: 6, scale: 1.01, rotation: 1, duration: 26 }
         ];
 
         const animation = positions[index] || positions[0];
