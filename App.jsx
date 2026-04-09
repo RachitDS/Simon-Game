@@ -127,9 +127,11 @@ function App() {
       .filter(Boolean)
       .map(function (element, index) {
         const positions = [
-          { x: 28, y: -22, scale: 1.08, duration: 6.4 },
-          { x: -34, y: 26, scale: 1.14, duration: 7.2 },
-          { x: 18, y: 30, scale: 1.06, duration: 5.8 }
+          { x: 34, y: -26, scale: 1.08, rotation: 8, duration: 18 },
+          { x: -42, y: 24, scale: 1.12, rotation: -10, duration: 22 },
+          { x: 26, y: 36, scale: 1.07, rotation: 12, duration: 20 },
+          { x: -20, y: -28, scale: 1.05, rotation: -8, duration: 16 },
+          { x: 18, y: 22, scale: 1.06, rotation: 6, duration: 24 }
         ];
 
         const animation = positions[index] || positions[0];
@@ -138,6 +140,7 @@ function App() {
           x: animation.x,
           y: animation.y,
           scale: animation.scale,
+          rotation: animation.rotation,
           duration: animation.duration,
           repeat: -1,
           yoyo: true,
@@ -480,6 +483,18 @@ function App() {
           backgroundRefs.current[2] = element;
         }}
         className="background-orb orb-three"
+      />
+      <div
+        ref={function (element) {
+          backgroundRefs.current[3] = element;
+        }}
+        className="background-orb orb-four"
+      />
+      <div
+        ref={function (element) {
+          backgroundRefs.current[4] = element;
+        }}
+        className="background-orb orb-five"
       />
 
       <main ref={containerRef} className="game-container">
