@@ -35,6 +35,7 @@ function App() {
   const containerRef = useRef(null);
   const statusCardRef = useRef(null);
   const buttonRefs = useRef([]);
+  const backgroundRefs = useRef([]);
   const headerRef = useRef(null);
   const subtitleRef = useRef(null);
   const startButtonRef = useRef(null);
@@ -120,6 +121,36 @@ function App() {
       window.localStorage.setItem("simon-high-score", String(level));
     }
   }, [level, highScore]);
+
+  useEffect(() => {
+    const backgroundTweens = backgroundRefs.current
+      .filter(Boolean)
+      .map(function (element, index) {
+        const positions = [
+          { x: 28, y: -22, scale: 1.08, duration: 6.4 },
+          { x: -34, y: 26, scale: 1.14, duration: 7.2 },
+          { x: 18, y: 30, scale: 1.06, duration: 5.8 }
+        ];
+
+        const animation = positions[index] || positions[0];
+
+        return gsap.to(element, {
+          x: animation.x,
+          y: animation.y,
+          scale: animation.scale,
+          duration: animation.duration,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut"
+        });
+      });
+
+    return () => {
+      backgroundTweens.forEach(function (tween) {
+        tween.kill();
+      });
+    };
+  }, []);
 
   useEffect(() => {
     if (isStarted) {
@@ -431,46 +462,67 @@ function App() {
   }
 
   return (
-    <main ref={containerRef} className="game-container">
-      <p ref={subtitleRef} className="game-subtitle">
-        React + Vite Simon Game
-      </p>
-      <h1 ref={headerRef} className="game-title">
-        Simon Game
-      </h1>
-
-      <ScoreBoard
-        level={level}
-        highScore={highScore}
-        patternLength={sequence.length}
-        statusTitle={statusTitle}
-        statusMessage={statusMessage}
-        isGameOver={isGameOver}
-        statusCardRef={statusCardRef}
+    <div className="app-scene">
+      <div
+        ref={function (element) {
+          backgroundRefs.current[0] = element;
+        }}
+        className="background-orb orb-one"
+      />
+      <div
+        ref={function (element) {
+          backgroundRefs.current[1] = element;
+        }}
+        className="background-orb orb-two"
+      />
+      <div
+        ref={function (element) {
+          backgroundRefs.current[2] = element;
+        }}
+        className="background-orb orb-three"
       />
 
-      <ButtonGrid
-        colors={colors}
-        activeColor={activeColor}
-        disabled={!isStarted || !isPlayerTurn || isGameOver}
-        onColorClick={handlePlayerInput}
-        buttonRefs={buttonRefs}
-      />
+      <main ref={containerRef} className="game-container">
+        <p ref={subtitleRef} className="game-subtitle">
+          React + Vite Simon Game
+        </p>
+        <h1 ref={headerRef} className="game-title">
+          Simon Game
+        </h1>
 
-      <button
-        ref={startButtonRef}
-        className="start-button"
-        type="button"
-        onClick={startGame}
-      >
-        {buttonLabel}
-      </button>
+        <ScoreBoard
+          level={level}
+          highScore={highScore}
+          patternLength={sequence.length}
+          statusTitle={statusTitle}
+          statusMessage={statusMessage}
+          isGameOver={isGameOver}
+          statusCardRef={statusCardRef}
+        />
 
-      <p className="keyboard-hint">
-        Keyboard: <span>R</span> Red, <span>G</span> Green, <span>B</span> Blue,
-        <span>Y</span> Yellow
-      </p>
-    </main>
+        <ButtonGrid
+          colors={colors}
+          activeColor={activeColor}
+          disabled={!isStarted || !isPlayerTurn || isGameOver}
+          onColorClick={handlePlayerInput}
+          buttonRefs={buttonRefs}
+        />
+
+        <button
+          ref={startButtonRef}
+          className="start-button"
+          type="button"
+          onClick={startGame}
+        >
+          {buttonLabel}
+        </button>
+
+        <p className="keyboard-hint">
+          Keyboard: <span>R</span> Red, <span>G</span> Green, <span>B</span>{" "}
+          Blue, <span>Y</span> Yellow
+        </p>
+      </main>
+    </div>
   );
 }
 
